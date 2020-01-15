@@ -2,8 +2,8 @@ import React from "react";
 import { gql, useQuery } from "@apollo/client";
 
 const ALL_PEOPLE = gql`
-  query AllPeople {
-    people {
+  query AllPeople($orderBy: SortOrder!) {
+    people(orderBy: $orderBy) {
       id
       name
     }
@@ -11,10 +11,9 @@ const ALL_PEOPLE = gql`
 `;
 
 export default function App() {
-  const {
-    loading,
-    data
-  } = useQuery(ALL_PEOPLE);
+  const { loading, data } = useQuery(ALL_PEOPLE, {
+    variables: { orderBy: "ASC" }
+  });
 
   return (
     <main>
