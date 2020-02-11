@@ -4,11 +4,14 @@ import { SortQuery } from "./client-extensions";
 
 const ALL_PEOPLE = gql`
   query AllPeople($orderBy: SortOrder!) {
-    activeSortOrder @client @export(as: "orderBy")
+    activeSortOrder @client {
+      theOrder @export(as: "orderBy")
+    }
     people(orderBy: $orderBy) {
       id
       name
     }
+    shmee(orderBy: $orderBy) @client
   }
 `;
 
@@ -21,11 +24,13 @@ export const CHANGE_SORT = gql`
 export default function App() {
   const { loading, data, error } = useQuery(ALL_PEOPLE);
   const { data: activeSortOrder } = useQuery(SortQuery);
+  console.log(data);
   const [a] = useMutation(CHANGE_SORT);
   const onClick = React.useCallback(() => {
     a({
       variables: {
-        order: activeSortOrder?.activeSortOrder === "ASC" ? "DESC" : "ASC"
+        order:
+          activeSortOrder?.activeSortOrder?.theOrder === "ASC" ? "DESC" : "ASC"
       }
     });
   }, [activeSortOrder]);

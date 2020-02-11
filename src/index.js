@@ -17,6 +17,12 @@ const client = new ApolloClient({
       changeActiveSortOrder: (_, args, { cache }) => {
         writeSortOrder(cache, args.order);
       }
+    },
+    Query: {
+      shmee: (_, args) => {
+        console.log("resolving", args);
+        return true;
+      }
     }
   }
 });

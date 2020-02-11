@@ -4,7 +4,10 @@ export const writeSortOrder = (cache, sort) => {
   cache.writeQuery({
     query: SortQuery,
     data: {
-      activeSortOrder: sort,
+      activeSortOrder: {
+        __typename: "ActiveOrder",
+        theOrder: sort
+      },
       __typename: "Query"
     }
   });
@@ -12,16 +15,22 @@ export const writeSortOrder = (cache, sort) => {
 
 export const SortQuery = gql`
   query ActiveSortOrder {
-    activeSortOrder @client
+    activeSortOrder @client {
+      theOrder
+    }
   }
 `;
 
 export const typeDefs = gql`
   extend type Query {
-    activeSortOrder: SortOrder!
+    activeSortOrder: ActiveOrder!
   }
 
   extend type Mutation {
     changeActiveSortOrder(order: SortOrder!): Boolean
+  }
+
+  type ActiveOrder {
+    theOrder: SortOrder!
   }
 `;
