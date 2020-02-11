@@ -8,17 +8,21 @@ import App from "./App";
 
 import "./index.css";
 
-const cache = new InMemoryCache();
-
 const client = new ApolloClient({
-  cache,
+  cache: new InMemoryCache(),
   link,
   typeDefs,
-  resolvers: {}
+  resolvers: {
+    Mutation: {
+      changeActiveSortOrder: (_, args, { cache }) => {
+        writeSortOrder(cache, args.order);
+      }
+    }
+  }
 });
 
 // write default order to the cache on app bootup
-writeSortOrder(cache, "DESC");
+writeSortOrder(client.cache, "DESC");
 
 render(
   <ApolloProvider client={client}>

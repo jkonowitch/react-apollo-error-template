@@ -20,4 +20,8 @@ export const typeDefs = gql`
   extend type Query {
     activeSortOrder: SortOrder!
   }
+
+  extend type Mutation {
+    changeActiveSortOrder(order: SortOrder!): Boolean
+  }
 `;
