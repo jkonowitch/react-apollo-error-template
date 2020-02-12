@@ -4,14 +4,10 @@ import { SortQuery } from "./client-extensions";
 
 const ALL_PEOPLE = gql`
   query AllPeople($orderBy: SortOrder!) {
-    activeSortOrder @client {
-      theOrder @export(as: "orderBy")
-    }
     people(orderBy: $orderBy) {
       id
       name
     }
-    shmee(orderBy: $orderBy) @client
   }
 `;
 
@@ -22,18 +18,21 @@ export const CHANGE_SORT = gql`
 `;
 
 export default function App() {
-  const { loading, data, error, client } = useQuery(ALL_PEOPLE);
-  const { data: activeSortOrder } = useQuery(SortQuery);
+  const [s, setS] = React.useState("ASC");
+  const { loading, data, error, client, refetch } = useQuery(ALL_PEOPLE, {
+    variables: { orderBy: s }
+  });
+  // const { data: activeSortOrder } = useQuery(SortQuery);
   console.log(data, client);
-  const [a] = useMutation(CHANGE_SORT);
+  // const [a] = useMutation(CHANGE_SORT);
   const onClick = React.useCallback(() => {
-    a({
+    refetch({
       variables: {
-        order:
-          activeSortOrder?.activeSortOrder?.theOrder === "ASC" ? "DESC" : "ASC"
+        orderBy: s === "ASC" ? "DESC" : "ASC"
       }
     });
-  }, [activeSortOrder]);
+    setS(s === "ASC" ? "DESC" : "ASC");
+  }, [s]);
 
   return (
     <main>
@@ -41,7 +40,6 @@ export default function App() {
       <p>
         This application can be used to demonstrate an error in Apollo Client.
       </p>
-      <p>Active Sort Order: {JSON.stringify(activeSortOrder)}</p>
       <button onClick={onClick}>Change Order</button>
       <h2>Names</h2>
       {loading || Boolean(error) ? (
