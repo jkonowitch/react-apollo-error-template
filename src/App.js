@@ -22,9 +22,9 @@ export const CHANGE_SORT = gql`
 `;
 
 export default function App() {
-  const { loading, data, error } = useQuery(ALL_PEOPLE);
+  const { loading, data, error, client } = useQuery(ALL_PEOPLE);
   const { data: activeSortOrder } = useQuery(SortQuery);
-  console.log(data);
+  console.log(data, client);
   const [a] = useMutation(CHANGE_SORT);
   const onClick = React.useCallback(() => {
     a({

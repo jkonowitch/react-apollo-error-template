@@ -21,7 +21,11 @@ const client = new ApolloClient({
     Query: {
       shmee: (_, args) => {
         console.log("resolving", args);
-        return true;
+        if (!args.orderBy) {
+          return "No argument provided";
+        } else {
+          return args.orderBy;
+        }
       }
     }
   }

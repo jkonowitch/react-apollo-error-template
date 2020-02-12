@@ -24,6 +24,7 @@ export const SortQuery = gql`
 export const typeDefs = gql`
   extend type Query {
     activeSortOrder: ActiveOrder!
+    shmee: String!
   }
 
   extend type Mutation {
